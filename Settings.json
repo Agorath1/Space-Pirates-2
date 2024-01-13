@@ -1,6 +1,6 @@
 {
   "final_room": "Bridge",
-  "text_speed": 0.005,
+  "text_speed": 0.000,
   "room_count": 8,
   "item_count": 6,
   "key_count": 2,
@@ -12,15 +12,19 @@
   },
 
   "player_commands": {
-    "grab": "grab",
+    "grab": "get",
     "search": "search",
-    "move": "move",
+    "move": "go",
     "inventory": "inventory",
     "help": "help",
     "quit": "quit",
     "save": "save",
     "load": "load"
   },
+
+  "opening_scene":
+    "You find yourself in a space ship. The surrounding are unfamiliar to you. You decide to make your way forward."
+  ,
 
   "directions": [
     "forward",
