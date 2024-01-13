@@ -83,6 +83,7 @@ class Player:
     def search_room(self):
         turning_directions = self.new_facing()
         new_rooms = [None, None, None, None, None, None]
+        print_slower("Doors:")
         for i in range(0, 6):
             new_rooms[i] = self.current_room.rooms_connected[turning_directions[i]]
 
@@ -90,10 +91,10 @@ class Player:
         for i in range(0, 6):
             if new_rooms[i] is not None:
                 new_room_names.append(game.settings["directions"][i].capitalize() + ": " + new_rooms[i].room_name)
-        print_slower(", ".join(new_room_names))
+        print_slower("  -" + ", ".join(new_room_names))
         if self.current_room.room_items_contained:
-            print_slower("Items contained: " + self.current_room.room_items_contained.get_color_item_name() + " - " +
-                         self.current_room.room_items_contained.item_description)
+            print_slower("Items contained: " + self.current_room.room_items_contained.get_color_item_name() +
+                         "\n  -" + self.current_room.room_items_contained.item_description)
 
     def get_items(self, command):
         if not self.current_room.room_items_contained:
@@ -113,7 +114,12 @@ class Player:
         pass
 
     def show_inventory(self):
-        pass
+        if self.inventory:
+            print_slower("Inventory:")
+            item_name = []
+            for item in self.inventory:
+                item_name.append(item.item_name)
+            print_slower("  -" + ", ".join(item_name))
 
     def new_facing(self):
         all_directions = []
@@ -159,10 +165,15 @@ class Game:
                 print_slower("Invalid Command.")
                 continue
 
+            if self.player.current_room == self.final_room:
+                self.final_encounter()
+                break
+
     def ui_display(self):
         if self.player.current_room is not None:
-            self.player.search_room()
             print_slower("Current room: " + self.player.current_room.room_name)
+            print_slower("  -" + self.player.current_room.room_description)
+            self.player.search_room()
 
     def print_break(self):
         print("-" * 100)
@@ -173,6 +184,9 @@ class Game:
     def save(self):
         pass  # Will store information that is stored in the player made from the player class
 
+    def final_encounter(self):
+        print_slower("You've reached the place holder ending. Thanks for playing.")
+
     def new_game(self):
         if self.error_check():
             return
@@ -180,10 +194,13 @@ class Game:
         self.store_items()
         self.connect_rooms()
         self.lock_rooms()
+        print_slower(self.settings["opening_scene"] + "\n")
         self.play()
 
     def help(self):
-        pass
+        print("Commands: ", end='')
+        print(", ".join(list(self.settings["player_commands"].values())))
+        return
 
     # Just checking the start values won't bomb the code.
     def error_check(self):
@@ -326,7 +343,7 @@ def import_settings():
     return settings
 
 
-def print_slower(text_output):
+def print_slower(text_output, ending='\n'):
     letter_counter = 0
     letter_number = 0
     while letter_number < len(text_output):
@@ -348,7 +365,7 @@ def print_slower(text_output):
             letter_number += 1
             letter_counter += 1
             time.sleep(game.print_timer)
-    print()
+    print(ending, end='')
 
 
 if __name__ == '__main__':
