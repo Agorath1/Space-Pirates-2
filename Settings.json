@@ -1,0 +1,203 @@
+{
+  "final_room": "Bridge",
+  "text_speed": 0.005,
+  "room_count": 8,
+  "item_count": 6,
+  "key_count": 2,
+
+  "player_settings": {
+    "start_room": "Storage_Bay",
+    "player_name": "Bob",
+    "oxygen_level": 40
+  },
+
+  "player_commands": {
+    "grab": "grab",
+    "search": "search",
+    "move": "move",
+    "inventory": "inventory",
+    "help": "help",
+    "quit": "quit",
+    "save": "save",
+    "load": "load"
+  },
+
+  "directions": [
+    "forward",
+    "right",
+    "back",
+    "left",
+    "up",
+    "down"
+  ],
+
+  "rooms": [
+    [
+      "Bridge",
+      "The command center of the spaceship, bustling with activity."
+    ],
+    [
+      "Engine Room",
+      "The heart of the spaceship, filled with advanced machinery."
+    ],
+    [
+      "Cargo Bay",
+      "A large storage area for supplies and equipment."
+    ],
+    [
+      "Armory",
+      "Secure room stocked with weapons and protective gear."
+    ],
+    [
+      "Crew Quarters",
+      "Personal living spaces for the crew members."
+    ],
+    [
+      "Mess Hall",
+      "A communal area where the crew gathers to eat and relax."
+    ],
+    [
+      "Medical Bay",
+      "Equipped with medical supplies and equipment for treating injuries."
+    ],
+    [
+      "Research Lab",
+      "A high-tech lab for scientific experiments and analysis."
+    ],
+    [
+      "Security Office",
+      "The monitoring center for the spaceship's security systems."
+    ],
+    [
+      "Server Room",
+      "Contains the main computers and data storage units."
+    ],
+    [
+      "Observation Deck",
+      "A room with large windows to view space and nearby celestial bodies."
+    ],
+    [
+      "Gym",
+      "A facility for the crew to maintain physical fitness."
+    ],
+    [
+      "Airlock",
+      "An entry-exit point for spacewalks and docking ships."
+    ],
+    [
+      "Prisoner Cells",
+      "Secured area for detaining unauthorized persons or prisoners."
+    ],
+    [
+      "Maintenance Tunnel",
+      "Narrow passages for accessing and repairing ship systems."
+    ],
+    [
+      "Communications Center",
+      "The hub for internal and external communications."
+    ],
+    [
+      "Hydroponics Bay",
+      "A room dedicated to growing plants and vegetables."
+    ],
+    [
+      "Laboratory",
+      "Used for various scientific and technological research."
+    ],
+    [
+      "Drone Control Room",
+      "Central control for operating and monitoring drones."
+    ],
+    [
+      "Engineering Workshop",
+      "A place for repairing and constructing mechanical equipment."
+    ],
+    [
+      "Escape Pods",
+      "Small vessels used for emergency evacuation."
+    ]
+  ],
+
+  "game_items" : [
+    [
+      "Alien Artifact",
+      "A mysterious relic from an unknown civilization."
+    ],
+    [
+      "Biometric Scanner",
+      "Used for identifying individuals through biological characteristics."
+    ],
+    [
+      "Captain's Keycard",
+      "Grants access to restricted areas like the bridge or captain's quarters."
+    ],
+    [
+      "Communication Relay",
+      "A device to enhance the ship's long-range communication capabilities."
+    ],
+    [
+      "Data Pad",
+      "A personal device for accessing and storing digital information."
+    ],
+    [
+      "Encryption Key",
+      "A digital key used for decrypting secure data."
+    ],
+    [
+      "Energy Shield",
+      "A portable shield generating a protective energy barrier."
+    ],
+    [
+      "Engineer's Passcode",
+      "A numerical code required to access the engine room and related systems."
+    ],
+    [
+      "Environmental Suit",
+      "Provides protection against hazardous environments and extreme temperatures."
+    ],
+    [
+      "Food Rations",
+      "Pre-packaged meals sufficient for sustaining a person for several days."
+    ],
+    [
+      "Holographic Map",
+      "A detailed map of the spaceship, showing all rooms and corridors."
+    ],
+    [
+      "Hydrospanner",
+      "A multipurpose tool used in mechanical and electronic repairs."
+    ],
+    [
+      "Laser Pistol",
+      "A standard-issue sidearm for space combat. Effective against unarmored targets."
+    ],
+    [
+      "Medkit",
+      "Contains essential medical supplies for treating injuries."
+    ],
+    [
+      "Oxygen Tank",
+      "A portable supply of oxygen for breathing in space or oxygen-deprived environments."
+    ],
+    [
+      "Security Override Module",
+      "A device capable of bypassing security protocols and unlocking doors."
+    ],
+    [
+      "Spacesuit",
+      "A suit designed for extravehicular activities in space."
+    ],
+    [
+      "Tool Kit",
+      "Contains various tools for repairing and maintaining spaceship systems."
+    ],
+    [
+      "Welding Torch",
+      "Used for cutting through metal or welding components."
+    ],
+    [
+      "Zero-G Boots",
+      "Footwear equipped with magnetic soles to walk in zero gravity environments."
+    ]
+  ]
+}
