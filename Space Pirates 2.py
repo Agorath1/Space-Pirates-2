@@ -185,7 +185,7 @@ class Game:
         pass  # Will store information that is stored in the player made from the player class
 
     def final_encounter(self):
-        print_slower("You've reached the place holder ending. Thanks for playing.")
+        print_slower(self.settings["final_scene"])
 
     def new_game(self):
         if self.error_check():

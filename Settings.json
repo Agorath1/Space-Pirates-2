@@ -3,7 +3,7 @@
   "text_speed": 0.000,
   "room_count": 8,
   "item_count": 6,
-  "key_count": 2,
+  "key_count": 6,
 
   "player_settings": {
     "start_room": "Storage_Bay",
@@ -23,8 +23,10 @@
   },
 
   "opening_scene":
-    "You find yourself in a space ship. The surrounding are unfamiliar to you. You decide to make your way forward."
-  ,
+    "You find yourself in a space ship. The surrounding are unfamiliar to you. You decide to make your way forward.",
+
+  "final_scene":
+    "You find yourself in a space ship. The surrounding are unfamiliar to you. You decide to make your way forward.",
 
   "directions": [
     "forward",
@@ -38,7 +40,7 @@
   "rooms": [
     [
       "Bridge",
-      "The command center of the spaceship, bustling with activity."
+      "The command center of the spaceship."
     ],
     [
       "Engine Room",

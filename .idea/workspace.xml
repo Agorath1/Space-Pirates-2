@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2941d540-089a-4704-bf39-6c9bafc77637" name="Changes" comment="Version Alpha 2.0&#10;New code and now with room and item shuffling.&#10;Also added the ability to go up and down.&#10;Still a work in progress">
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Space-Pirates-2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Space-Pirates-2.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Settings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Space Pirates 2.py" beforeDir="false" afterPath="$PROJECT_DIR$/Space Pirates 2.py" afterDir="false" />
-    </list>
+    <list default="true" id="2941d540-089a-4704-bf39-6c9bafc77637" name="Changes" comment="Version 2.0 Space Pirates" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,7 +30,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705182133507</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Version 2.0 Space Pirates">
+      <option name="closed" value="true" />
+      <created>1705187740065</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1705187740065</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -52,6 +55,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Version Alpha 2.0&#10;New code and now with room and item shuffling.&#10;Also added the ability to go up and down.&#10;Still a work in progress" />
     <MESSAGE value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;Space Pirates 2.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;Space Pirates 2.py" />
+    <MESSAGE value="Version 2.0 Space Pirates" />
+    <option name="LAST_COMMIT_MESSAGE" value="Version 2.0 Space Pirates" />
   </component>
 </project>
