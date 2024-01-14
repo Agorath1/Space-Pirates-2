@@ -3,13 +3,10 @@
   "text_speed": 0.000,
   "room_count": 8,
   "item_count": 6,
-  "key_count": 6,
-
-  "player_settings": {
-    "start_room": "Storage_Bay",
-    "player_name": "Bob",
-    "oxygen_level": 40
-  },
+  "key_count": 4,
+  "player_name": "Bob",
+  "oxygen_level": 40,
+  "file_name": "",
 
   "player_commands": {
     "grab": "get",
@@ -17,16 +14,15 @@
     "move": "go",
     "inventory": "inventory",
     "help": "help",
-    "quit": "quit",
+    "quit": "menu",
     "save": "save",
     "load": "load"
   },
 
-  "opening_scene":
-    "You find yourself in a space ship. The surrounding are unfamiliar to you. You decide to make your way forward.",
-
-  "final_scene":
-    "You find yourself in a space ship. The surrounding are unfamiliar to you. You decide to make your way forward.",
+  "scenes": {
+  "opening_scene": "You find yourself in a space ship. The surrounding are unfamiliar to you. You decide to make your way forward.",
+  "final_scene": "You've reached the final room and gained control of the ship."
+},
 
   "directions": [
     "forward",
