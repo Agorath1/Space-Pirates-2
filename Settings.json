@@ -15,8 +15,7 @@
     "inventory": "inventory",
     "help": "help",
     "quit": "menu",
-    "save": "save",
-    "load": "load"
+    "save": "save"
   },
 
   "scenes": {

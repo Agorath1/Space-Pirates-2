@@ -1,7 +1,12 @@
+# The game is a text based adventure that randomly generates rooms and items. There are locks for some rooms that
+# prevent advancement without the proper item.
+#
+#
 # Ver.      Date          Author
 # 2.0   Jan 11, 2024    Robertp3001
 
 import json
+import os
 import random
 import time
 
@@ -154,11 +159,11 @@ class Game:
 
     def main_menu(self):
         while True:
-            print("Welcome " + self.settings["player_name"] + "!")
-            print("Enter New Game, Load Game, ", end='')
+            print_slower("Welcome " + self.settings["player_name"] + "!")
+            print_slower("Enter New Game, Load Game, ", '')
             if self.game_loaded:
-                print("Resume Game, ", end='')
-            print("Settings, Quit:")
+                print_slower("Resume Game, ", '')
+            print_slower("Settings, Quit:")
             command = input(">>>").lower()
             if command == "new game":
                 self.new_game()
@@ -171,7 +176,7 @@ class Game:
             elif command == "quit":
                 break
             else:
-                print("Invalid Command")
+                print_slower("Invalid Command")
 
     def play(self):
         while True:
@@ -269,76 +274,90 @@ class Game:
         print_slower("---Game Saved---")
 
     def load(self):
-        self.settings = import_settings(self.file_path)
-        self.items = self.create_items()
-        self.rooms = self.create_rooms()
-        self.player = self.create_player()
-        self.settings = import_settings("Save Files\\" + input("Enter File name:\n>>>") + ".json")
+        save_file_path = "./Save Files"
+        save_files = [f for f in os.listdir(save_file_path) if f.endswith(".json")]
 
-        new_room_list = []
-        for save_room in self.settings["rooms"]:
-            for room in self.rooms:
-                if room.room_name == save_room[0]:
-                    room.room_lock_item = find_item(self.items, save_room[3])
-                    room.room_items_contained = find_item(self.items, save_room[4])
-                    for i in range(0, 6):
-                        if save_room[2][i]:
-                            room.rooms_connected[i] = find_room(self.rooms, save_room[2][i])
-                    new_room_list.append(room)
-        self.rooms = new_room_list
-        self.player.current_room = find_room(self.rooms, self.settings["current_room"])
-        self.player.direction_facing = self.settings["direction_facing"]
-        for item_name in self.settings["inventory"]:
-            self.player.inventory.append(find_item(self.items, item_name))
-        self.final_room = find_room(self.rooms, self.settings["final_room"])
-        self.game_loaded = True
-        self.resume_game()
+        print_slower("Save Files:")
+        for file in save_files:
+            print_slower(file[:-5])
+        file_loaded = input("Enter File name:\n>>>") + ".json"
+        if file_loaded in save_files:
+            self.settings = import_settings(self.file_path)
+            self.items = self.create_items()
+            self.rooms = self.create_rooms()
+            self.player = self.create_player()
+            self.settings = import_settings("Save Files\\" + file_loaded)
+
+            new_room_list = []
+            for save_room in self.settings["rooms"]:
+                for room in self.rooms:
+                    if room.room_name == save_room[0]:
+                        room.room_lock_item = find_item(self.items, save_room[3])
+                        room.room_items_contained = find_item(self.items, save_room[4])
+                        for i in range(0, 6):
+                            if save_room[2][i]:
+                                room.rooms_connected[i] = find_room(self.rooms, save_room[2][i])
+                        new_room_list.append(room)
+            self.rooms = new_room_list
+            self.player.current_room = find_room(self.rooms, self.settings["current_room"])
+            self.player.direction_facing = self.settings["direction_facing"]
+            for item_name in self.settings["inventory"]:
+                self.player.inventory.append(find_item(self.items, item_name))
+            self.final_room = find_room(self.rooms, self.settings["final_room"])
+            self.game_loaded = True
+            self.resume_game()
+        else:
+            print_slower("File not found.")
 
     def resume_game(self):
         self.play()
 
     @staticmethod
     def print_break():
-        print("-" * 100)
+        print_slower("-" * 100)
 
     def final_encounter(self):
         print_slower(self.settings["scenes"]["final_scene"])
 
     def help(self):
-        print("Commands: ", end='')
-        print(", ".join(list(self.settings["player_commands"].values())))
+        print_slower("Commands: ", '')
+        print_slower(", ".join(list(self.settings["player_commands"].values())))
         return
 
     # Just checking the start values won't bomb the code.
     def error_check(self):
         if self.settings["room_count"] == 0:
-            print("Not enough rooms. Can not have 0 rooms.")
+            print_slower("Not enough rooms. Can not have 0 rooms.")
             return True
 
         if self.settings["room_count"] > len(self.rooms):
-            print("Too many rooms. I don't have that many made.")
+            print_slower("Too many rooms. I don't have that many made.")
             return True
 
         if self.settings["item_count"] > len(self.items):
-            print("Too many items. I don't have that many to pick from.")
+            print_slower("Too many items. I don't have that many to pick from.")
             return True
 
         if self.settings["room_count"] <= self.settings["item_count"] + 1:
-            print("Too many items. Can not have more items than rooms excluding first and last room.")
+            print_slower("Too many items. Can not have more items than rooms excluding first and last room.")
             return True
 
         if self.settings["key_count"] > self.settings["item_count"]:
-            print("Too many keys. Can not have more keys than items.")
+            print_slower("Too many keys. Can not have more keys than items.")
             return True
 
         if self.settings["key_count"] == 0:
-            print("Not enough keys. Min. 1")
+            print_slower("Not enough keys. Min. 1")
             return True
         return False
 
     def settings_menu(self):
         while True:
-            print("You can change number of rooms, items, and keys. You can also change the final room, print speed.")
+            print_slower("You can change number of rooms, items, and keys. You can also change the final room, "
+                         "print speed.")
+            for key, item in self.settings.items():
+                if key != "rooms" and key != "game_items" and key != "scenes":
+                    print_slower(key + ":" + str(item))
             change = input("Enter settings:")
             if change == "quit":
                 return
