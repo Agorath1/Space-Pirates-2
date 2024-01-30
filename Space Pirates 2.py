@@ -3,7 +3,7 @@
 #
 #
 # Ver.      Date          Author
-# 2.0   Jan 11, 2024    Robertp3001
+# 2.1   Jan 29, 2024    Robertp3001
 
 import json
 import os
@@ -11,6 +11,7 @@ import random
 import time
 
 
+# Room Class
 class Room:
     def __init__(self, room_name, room_description, saved_connection=None, saved_lock_item=None, saved_item=None):
         if saved_connection is None:
@@ -23,30 +24,23 @@ class Room:
         self.room_items_contained = saved_item
         self.room_tier = 0
 
-    # Future Use
-    def get_color_room_name(self):
-        return self.room_name
-
-    # Future Use
-    def create_fixtures(self, room_fixtures):
-        self.room_fixtures = room_fixtures
-
+    # Enables locks for room
     def create_lock(self, room_lock_item):
         self.room_lock_item = room_lock_item
 
+    # Places item in the room
     def place_items(self, room_items_contained):
         self.room_items_contained = room_items_contained
 
 
+# Items class
 class Item:
     def __init__(self, item_name, item_description):
         self.item_name = item_name
         self.item_description = item_description
 
-    def get_color_item_name(self):
-        return self.item_name
 
-
+# Player Class
 class Player:
     def __init__(self, player_name, oxygen_level, inventory=None, current_room=None, direction_facing=0):
         if inventory is None:
@@ -57,67 +51,87 @@ class Player:
         self.oxygen_level = oxygen_level
         self.inventory = inventory
 
+    # Receives a direction and moves player that direction.
     def move_rooms(self, command):
-        room_number = 7
+        room_number = 7  # Room 7 is considered no room.
+
+        # Find the room in the direction indicated
         for direction in game.settings["directions"]:
             if command in direction:
                 room_number = game.settings["directions"].index(direction)
                 break
+
+        # if the direction doesn't exist, return invalid input
         if room_number == 7:
             print_slower("Invalid Direction Input")
             return
         room_number = self.new_facing()[room_number]
         connected_room = self.current_room.rooms_connected[room_number]
 
+        # This is changes what room is being faced based on direction, excluding rooms going up or down.
         if room_number < 4:
             self.direction_facing = room_number
 
+        # If no room is found in that direction, returns back to main loop
         if connected_room is None:
             print_slower("There's no room there")
             return
 
+        # Checks if room is locked.
         if connected_room.room_lock_item:
             print_slower(connected_room.room_name + " is locked with " + connected_room.room_lock_item.item_name)
+
+            # Check inventory for the lock item
             for item in self.inventory:
                 if item == connected_room.room_lock_item:
                     print_slower(connected_room.room_name + " unlocked with " + item.item_name)
                     connected_room.room_lock_item = None
                     self.current_room = connected_room
-                    break
+                    break  # Breaks loop if the room is unlocked
             return
 
+        # This moves the player to the new room
         self.current_room = connected_room
         return
 
+    # Used to search the room for room directions
     def search_room(self):
         turning_directions = self.new_facing()
         new_rooms = [None, None, None, None, None, None]
         print_slower("Doors:")
+
+        # Gets the rooms for each direction based on direction facing
         for i in range(0, 6):
             new_rooms[i] = self.current_room.rooms_connected[turning_directions[i]]
 
+        # This section prints out the names of the rooms.
         new_room_names = []
         for i in range(0, 6):
             if new_rooms[i] is not None:
                 new_room_names.append(game.settings["directions"][i].capitalize() + ": " + new_rooms[i].room_name)
         print_slower("  -" + ", ".join(new_room_names))
         if self.current_room.room_items_contained:
-            print_slower("Items contained: " + self.current_room.room_items_contained.get_color_item_name() +
+            print_slower("Items contained: " + self.current_room.room_items_contained.item_name +
                          "\n  -" + self.current_room.room_items_contained.item_description)
 
+    # This is used to get items from the room.
     def get_items(self, command):
+        # Checks if the room even has an item
         if not self.current_room.room_items_contained:
             print_slower("There is no item here.")
             return
 
+        # Compares the name of the item being grabbed to the item in the room.
         if command.lower() in self.current_room.room_items_contained.item_name.lower():
             print_slower(self.current_room.room_items_contained.item_name + " obtained.")
             self.inventory.append(self.current_room.room_items_contained)
             self.current_room.room_items_contained = None
             return
 
+        # Prints if the item wasn't found.
         print_slower(command.capitalize() + " was not found.")
 
+    # Used to print inventory
     def show_inventory(self):
         if self.inventory:
             print_slower("Inventory:")
@@ -126,6 +140,7 @@ class Player:
                 item_name.append(item.item_name)
             print_slower("  -" + ", ".join(item_name))
 
+    # Gets new reference points for rooms based on the direction being faced.
     def new_facing(self):
         all_directions = []
         for i in range(0, 4):
@@ -135,6 +150,7 @@ class Player:
         return all_directions
 
 
+# Game Class
 class Game:
     def __init__(self):
         self.game_loaded = False
@@ -147,6 +163,7 @@ class Game:
         self.file_path = None
         self.reset()
 
+    # Allows for resetting the game
     def reset(self):
         self.file_path = 'Settings.json'
         self.settings = import_settings(self.file_path)
@@ -157,10 +174,11 @@ class Game:
         self.final_room = None
         self.game_loaded = False
 
+    # This is the menu loop, waits for commands to enter the game or quit
     def main_menu(self):
         while True:
             print_slower("Welcome " + self.settings["player_name"] + "!")
-            print_slower("Enter New Game, Load Game, ", '')
+            print_slower("Enter New Game, Resume Game, Load Game, ", '')
             if self.game_loaded:
                 print_slower("Resume Game, ", '')
             print_slower("Settings, Quit:")
@@ -178,6 +196,7 @@ class Game:
             else:
                 print_slower("Invalid Command")
 
+    # This is the main loop for playing the game
     def play(self):
         while True:
             self.ui_display()
@@ -209,6 +228,7 @@ class Game:
                 self.final_encounter()
                 break
 
+    # This will reset all the values to start a new game
     def new_game(self):
         self.reset()
         if self.error_check():
@@ -219,14 +239,17 @@ class Game:
         self.connect_rooms()
         self.lock_rooms()
         print_slower(self.settings["scenes"]["opening_scene"] + "\n")
+        self.game_loaded = True
         self.play()
 
+    # Sets up the display of what is shown after each command
     def ui_display(self):
         if self.player.current_room is not None:
             print_slower("Current room: " + self.player.current_room.room_name)
             print_slower("  -" + self.player.current_room.room_description)
             self.player.search_room()
 
+    # Stores data into a json file in save files folder
     def save_game(self):
         save_file = {"final_room": self.settings["final_room"],
                      "text_speed": self.settings["text_speed"],
@@ -240,12 +263,14 @@ class Game:
                      "scenes": self.settings["scenes"]
                      }
 
+        # Used to break down item classes into a list to be stored
         player_inventory = []
         if self.player.inventory:
             for item in self.player.inventory:
                 player_inventory.append(item.item_name)
         save_file["inventory"] = player_inventory
 
+        # Breaks down room classes to be stored
         saved_rooms = []
         for room in self.rooms:
             saved_connections = []
@@ -267,20 +292,29 @@ class Game:
                                 saved_item])
         save_file["rooms"] = saved_rooms
 
+        folder_path = 'Save Files'
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        # Stores the file name if it isn't stored. File saves are based off player name.
         if self.settings["file_name"] == "":
-            save_file["file_name"] = "Save Files\\" + self.settings["player_name"] + ".json"
+            save_file["file_name"] = folder_path + "\\" + self.settings["player_name"] + ".json"
         with open(save_file["file_name"], 'w') as file:
             json.dump(save_file, file, indent=4)
         print_slower("---Game Saved---")
 
+    # Loads a game from json file
     def load(self):
         save_file_path = "./Save Files"
         save_files = [f for f in os.listdir(save_file_path) if f.endswith(".json")]
 
+        # Prints a list of save files
         print_slower("Save Files:")
         for file in save_files:
             print_slower(file[:-5])
         file_loaded = input("Enter File name:\n>>>") + ".json"
+
+        # Checks if the file exists, then retrieves information.
         if file_loaded in save_files:
             self.settings = import_settings(self.file_path)
             self.items = self.create_items()
@@ -288,6 +322,7 @@ class Game:
             self.player = self.create_player()
             self.settings = import_settings("Save Files\\" + file_loaded)
 
+            # Recreates room classes
             new_room_list = []
             for save_room in self.settings["rooms"]:
                 for room in self.rooms:
@@ -298,6 +333,8 @@ class Game:
                             if save_room[2][i]:
                                 room.rooms_connected[i] = find_room(self.rooms, save_room[2][i])
                         new_room_list.append(room)
+
+            # Loads remaining saved data.
             self.rooms = new_room_list
             self.player.current_room = find_room(self.rooms, self.settings["current_room"])
             self.player.direction_facing = self.settings["direction_facing"]
@@ -309,22 +346,26 @@ class Game:
         else:
             print_slower("File not found.")
 
+    # Just resumes game back from main menu
     def resume_game(self):
         self.play()
 
+    # Just a dash used to separate portions of text.
     @staticmethod
     def print_break():
         print_slower("-" * 100)
 
+    # Final encounter scene
     def final_encounter(self):
         print_slower(self.settings["scenes"]["final_scene"])
 
+    # Prints list of player commands
     def help(self):
         print_slower("Commands: ", '')
         print_slower(", ".join(list(self.settings["player_commands"].values())))
         return
 
-    # Just checking the start values won't bomb the code.
+    # Just error checking the start values won't bomb the code.
     def error_check(self):
         if self.settings["room_count"] == 0:
             print_slower("Not enough rooms. Can not have 0 rooms.")
@@ -351,6 +392,7 @@ class Game:
             return True
         return False
 
+    # Allows for changing of settings in json file. Probably easier just to modify the json file.
     def settings_menu(self):
         while True:
             print_slower("You can change number of rooms, items, and keys. You can also change the final room, "
@@ -372,6 +414,7 @@ class Game:
                 self.settings[split_change[0]] = split_change[1]
                 print_slower(split_change[0] + " set to " + str(split_change[1]))
 
+    # Locks rooms with item based on tier level.
     def lock_rooms(self):
         for room in self.rooms:
             if room.room_tier != 1:
@@ -459,22 +502,26 @@ class Game:
             if connection_points:
                 return room2, random.choice(connection_points)
 
+    # Creates all the items
     def create_items(self):
         item_list = []
         for items in self.settings['game_items']:
             item_list.append(Item(*items))
         return item_list
 
+    # Creates all the rooms.
     def create_rooms(self):
         room_list = []
         for rooms in self.settings['rooms']:
             room_list.append(Room(*rooms))
         return room_list
 
+    # Create the player
     def create_player(self):
         return Player(self.settings["player_name"], self.settings["oxygen_level"])
 
 
+# Find if class item exists based on name
 def find_item(item_list, item_name):
     for item in item_list:
         if item.item_name == item_name:
@@ -482,6 +529,7 @@ def find_item(item_list, item_name):
     return None
 
 
+# Find if classroom exists based on name
 def find_room(room_list, room_name):
     for room in room_list:
         if room.room_name == room_name:
@@ -489,12 +537,14 @@ def find_room(room_list, room_name):
     return None
 
 
+# Used to import files
 def import_settings(settings_file):
     with open(settings_file, 'r') as file:
         settings = json.load(file)
     return settings
 
 
+# Slows down printing speed of text.
 def print_slower(text_output, ending='\n'):
     letter_counter = 0
     letter_number = 0
@@ -520,6 +570,7 @@ def print_slower(text_output, ending='\n'):
     print(ending, end='')
 
 
+# Initializes game if this is the main file
 if __name__ == '__main__':
     game = Game()
     game.main_menu()
