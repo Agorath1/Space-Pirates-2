@@ -1,6 +1,6 @@
 {
   "final_room": "Bridge",
-  "text_speed": 0.000,
+  "text_speed": 0.005,
   "room_count": 8,
   "item_count": 6,
   "key_count": 4,

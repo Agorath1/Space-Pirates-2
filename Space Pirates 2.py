@@ -3,7 +3,7 @@
 #
 #
 # Ver.      Date          Author
-# 2.1   Jan 29, 2024    Robertp3001
+# 2.2   Feb 22, 2024    Robertp3001
 
 import json
 import os
@@ -13,7 +13,7 @@ import time
 
 # Room Class
 class Room:
-    def __init__(self, room_name, room_description, saved_connection=None, saved_lock_item=None, saved_item=None):
+    def __init__(self, room_name, room_description, saved_connection=None, saved_lock_item=None, saved_item=None, visited=''):
         if saved_connection is None:
             saved_connection = [None, None, None, None, None, None]
         self.room_name = room_name
@@ -23,6 +23,7 @@ class Room:
         self.room_lock_item = saved_lock_item
         self.room_items_contained = saved_item
         self.room_tier = 0
+        self.visited = visited
 
     # Enables locks for room
     def create_lock(self, room_lock_item):
@@ -31,6 +32,9 @@ class Room:
     # Places item in the room
     def place_items(self, room_items_contained):
         self.room_items_contained = room_items_contained
+
+    def get_name(self):
+        return self.room_name + self.visited
 
 
 # Items class
@@ -51,8 +55,8 @@ class Player:
         self.oxygen_level = oxygen_level
         self.inventory = inventory
 
-    # Receives a direction and moves player that direction.
     def move_rooms(self, command):
+        # Receives a direction and moves player that direction.
         room_number = 7  # Room 7 is considered no room.
 
         # Find the room in the direction indicated
@@ -91,6 +95,7 @@ class Player:
             return
 
         # This moves the player to the new room
+        connected_room.visited = "*"
         self.current_room = connected_room
         return
 
@@ -108,7 +113,7 @@ class Player:
         new_room_names = []
         for i in range(0, 6):
             if new_rooms[i] is not None:
-                new_room_names.append(game.settings["directions"][i].capitalize() + ": " + new_rooms[i].room_name)
+                new_room_names.append(game.settings["directions"][i].capitalize() + ": " + new_rooms[i].get_name())
         print_slower("  -" + ", ".join(new_room_names))
         if self.current_room.room_items_contained:
             print_slower("Items contained: " + self.current_room.room_items_contained.item_name +
@@ -166,7 +171,7 @@ class Game:
     # Allows for resetting the game
     def reset(self):
         self.file_path = 'Settings.json'
-        self.settings = import_settings(self.file_path)
+        self.settings = import_json(self.file_path)
         self.items = self.create_items()
         self.rooms = self.create_rooms()
         self.player = self.create_player()
@@ -178,19 +183,23 @@ class Game:
     def main_menu(self):
         while True:
             print_slower("Welcome " + self.settings["player_name"] + "!")
-            print_slower("Enter New Game, Resume Game, Load Game, ", '')
+            print_slower("Enter New Game, Load Game, ", '')
             if self.game_loaded:
-                print_slower("Resume Game, ", '')
-            print_slower("Settings, Quit:")
+                print_slower("Resume Game, Save Game, ", '')
+            print_slower("Quit:")
+            print_slower("Type in one of the above options to continue.")
+            print_slower("This game runs best in a cmd window.")
             command = input(">>>").lower()
             if command == "new game":
                 self.new_game()
-            elif command == "resume game" and self.game_loaded:
-                self.resume_game()
             elif command == "load game":
                 self.load()
-            elif command == "settings":
-                self.settings_menu()
+            elif command == "resume game" and self.game_loaded:
+                self.resume_game()
+            elif command == "save game" and self.game_loaded:
+                self.save_game()
+            # elif command == "settings":
+            #     self.settings_menu()
             elif command == "quit":
                 break
             else:
@@ -289,7 +298,8 @@ class Game:
                                 room.room_description,
                                 saved_connections,
                                 saved_lock,
-                                saved_item])
+                                saved_item,
+                                room.visited])
         save_file["rooms"] = saved_rooms
 
         folder_path = 'Save Files'
@@ -306,6 +316,8 @@ class Game:
     # Loads a game from json file
     def load(self):
         save_file_path = "./Save Files"
+        if not os.path.exists(save_file_path):
+            os.makedirs(save_file_path)
         save_files = [f for f in os.listdir(save_file_path) if f.endswith(".json")]
 
         # Prints a list of save files
@@ -316,17 +328,18 @@ class Game:
 
         # Checks if the file exists, then retrieves information.
         if file_loaded in save_files:
-            self.settings = import_settings(self.file_path)
+            self.settings = import_json(self.file_path)
             self.items = self.create_items()
             self.rooms = self.create_rooms()
             self.player = self.create_player()
-            self.settings = import_settings("Save Files\\" + file_loaded)
+            self.settings = import_json("Save Files\\" + file_loaded)
 
             # Recreates room classes
             new_room_list = []
             for save_room in self.settings["rooms"]:
                 for room in self.rooms:
                     if room.room_name == save_room[0]:
+                        room.visited = save_room[5]
                         room.room_lock_item = find_item(self.items, save_room[3])
                         room.room_items_contained = find_item(self.items, save_room[4])
                         for i in range(0, 6):
@@ -427,6 +440,7 @@ class Game:
         self.rooms.remove(self.final_room)
         self.rooms = random.sample(self.rooms, self.settings["room_count"])
         self.player.current_room = random.choice(self.rooms)
+        self.player.current_room.visited = "*"
         self.items = random.sample(self.items, self.settings["item_count"])
         self.keys = list(random.sample(self.items, self.settings["key_count"]))
         for key in self.keys:
@@ -538,7 +552,7 @@ def find_room(room_list, room_name):
 
 
 # Used to import files
-def import_settings(settings_file):
+def import_json(settings_file):
     with open(settings_file, 'r') as file:
         settings = json.load(file)
     return settings
